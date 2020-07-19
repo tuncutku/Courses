@@ -1,3 +1,4 @@
+from flask import session
 from database import db
 
 
@@ -12,19 +13,23 @@ class User(object):
         pass
 
     @classmethod
-    def get_by_email(cls):
-        pass
+    def get_by_email(cls, email):
+        data = db.find_user_by_email(email)
+        if data is not None:
+            return cls(*data)
 
     @staticmethod
     def login_valid(email, password):
-        pass
+        user = User.get_by_email(email)
+        if user is not None:
+            # Check the password
+            return user.password == password
+        return False
 
     @staticmethod
-    def register(email, password):
-        pass
-
-    def login():
-        pass
+    def login(user_email):
+        # login_valid has already been called
+        session["email"] = user_email
 
     def logout():
         pass
@@ -39,8 +44,7 @@ class User(object):
             "password": self.password,
         }
 
-    @classmethod
-    def register(cls, email, password):
-        user = cls(email, password)
-        db.add_user(user)
+    @staticmethod
+    def register(email, password):
+        db.add_user(email, password)
 

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS blogs (
     );"""
 
 INSERT_USER = "INSERT INTO users (email, password) VALUES (%s, %s)"
+SELECT_USER_BY_EMAIL = "SELECT email, password FROM users WHERE email = %s"
 
 
 def create_tables(connection):
@@ -39,6 +40,12 @@ def create_tables(connection):
 # -- users --
 
 
-def add_user(user):
+def add_user(email, password):
     with get_cursor() as cursor:
-        cursor.execute(INSERT_USER, (user.email, user.password))
+        cursor.execute(INSERT_USER, (email, password))
+
+
+def find_user_by_email(email):
+    with get_cursor() as cursor:
+        cursor.execute(SELECT_USER_BY_EMAIL, (email,))
+        return cursor.fetchone()
