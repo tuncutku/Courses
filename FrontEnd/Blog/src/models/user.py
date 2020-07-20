@@ -1,5 +1,6 @@
 from flask import session
 from database import db
+from models.blog import Blog
 
 
 class User(object):
@@ -9,8 +10,10 @@ class User(object):
         self._id = _id
 
     @classmethod
-    def get_by_id(cls):
-        pass
+    def get_by_id(cls, _id):
+        data = db.find_user_by_id(_id)
+        if data is not None:
+            return cls(*data)      
 
     @classmethod
     def get_by_email(cls, email):
@@ -34,8 +37,8 @@ class User(object):
     def logout():
         pass
 
-    def get_blogs():
-        pass
+    def get_blogs(self):
+        return Blog.get_blogs(self._id)
 
     def json(self):
         return {
