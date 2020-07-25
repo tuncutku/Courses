@@ -2,11 +2,14 @@ from typing import Dict, List
 from bs4 import BeautifulSoup
 import requests
 import re
-import uuid
-from common import database
+
+from models.model import Model
+from common.database import Database
 
 
-class Item:
+class Item(Model):
+    collection = "item"
+
     def __init__(self, url: str, tag_name: str, query: Dict, _id: str = None):
         super().__init__()
         self.url = url
@@ -32,10 +35,8 @@ class Item:
         self.price = float(without_commas)
         return self.price
 
-    @classmethod
-    def all(cls) -> List["Item"]:
-        items_from_db = database.get_items()
-        return [cls(*item) for item in items_from_db]
-
     def save(self) -> None:
-        database.insert_item(self.url, self.tag_name, self.query, self.price)
+        Database.insert_item(self.url, self.tag_name, self.query)
+
+    def remove():
+        pass
